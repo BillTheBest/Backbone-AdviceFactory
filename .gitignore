@@ -1,0 +1,13 @@
+.DS_Store
+.idea/
+.true
+.jshintrc
+.grunt/
+bower_components
+/node_modules
+/coverage
+bin/
+**/compiled
+**/dist
+_SpecRunner.html
+npm-debug.log
