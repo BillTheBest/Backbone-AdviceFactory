@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>index.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "", thisFile = "index.md", defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+  <link rel="stylesheet" href="docs-style.css" />
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="docs markdown">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+<div class="project-header">
+    <div class="project-name">Backbone.AdviceFactory</div>
+    <div class="intro">
+         Advice factory provides an interface to apply advice onto object constructors. It allows you to write to and instantiate from a cache of constructors using a namespace. Allows for creating new constructors from previously cached base constructors.
+    </div>
+</div>
+
+<h2 id="source">Source</h2>
+<p>Read the annotated source <a href="backbone-advicefactory.js.html" target="_blank">here</a></p>
+<div class="clear"></div>
+<div class="spacer"></div>
+
+<h2 id="overview">Overview</h2>
+<div class="left">
+AdviceFactory is built on top of <a href="http://dataminr.github.io/advice" target="_blank">Advice</a>. It supports all the advice keywords and provides a safe, easy framework for composition and inheritance using advice. \n
+
+When mixing inheritance models (Backbone&#39;s extends and Advice&#39;s mixins) there are often cases when you may overwrite mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work. \n
+
+For instance you may extend &quot;initialize&quot; in a latter class that will not only override the former &quot;initialize&quot; method but also all the other mixins that were put on that function. To prevent this happening 
+Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
+
+</div>
+
+<div class="clear"></div>
+
+<h2 id="examples">Examples</h2>
+<p><a href="examples/example1.md.html">Basic example</a></p>
+<div class="clear"></div>
+<a href="examples/example2.md.html">Example with overrides and mixins</a>
+<div class="clear"></div>
+
+<h2 id="api">API</h2>
+<p>The Backbone.AdviceFactory register</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>register</td>
+<td>Registers a constructor using a namespace</td>
+</tr>
+<tr>
+<td>inst</td>
+<td>Returns an instance of a the given constructor namespace</td>
+</tr>
+<tr>
+<td>get</td>
+<td>Returns a constructor using a constructor namespace</td>
+</tr>
+<tr>
+<td>getMixinsForType</td>
+<td>Returns an array of mixins for a given constructor namespace</td>
+</tr>
+</tbody>
+</table>
+<h4 id="register">register</h4>
+<p>Registers a constructor using a namespace. The second argument is the options object. This object can contain any of the <a href="http://dataminr.github.io/advice">advice</a> keywords. </p>
+<p><em>Note:</em> The method is smart about applying properties and methods that are not contained in an advice keyword. By default, all such methods will be applied as &#39;after&#39;s and all such properties will replace
+ones that already exist on the base constructor.</p>
+<p>In addition the register method options object has the following reserved keys:</p>
+<table>
+<thead>
+<tr>
+<th>Keyword</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>base</td>
+<td>the constructor to be used as the base for extension</td>
+</tr>
+<tr>
+<td>mixins</td>
+<td>Array of mixins to be applied on the constructor</td>
+</tr>
+<tr>
+<td>mixinOptions</td>
+<td>Mixin options that are passed to the constructor</td>
+</tr>
+<tr>
+<td>extend</td>
+<td>extends the constructor with the given object</td>
+</tr>
+<tr>
+<td>deepExtend</td>
+<td>deep extends the constructor with the given object</td>
+</tr>
+</tbody>
+</table>
+<p><em>Note:</em> Mixins are applied after the options object is used to extend the constructor. </p>
+<p>Example:</p>
+
+<div class="highlight"><pre><code><span class="c1">// Register the constructor using a namespace</span>
+<span class="nx">Factory</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;MyConstructorName&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="c1">// Property is replaced on base constructor</span>
+    <span class="nx">myProperty</span><span class="o">:</span> <span class="nx">foo</span><span class="p">,</span>
+
+    <span class="c1">// Method applied as an after on the constructor</span>
+    <span class="nx">myMethod</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="s1">&#39; is me&#39;</span><span class="p">);</span>
+    <span class="p">},</span>
+
+    <span class="c1">// Mixins applied on the constructor</span>
+    <span class="nx">mixins</span><span class="o">:</span> <span class="p">[</span>
+        <span class="kd">function</span><span class="p">(</span><span class="nx">mixinOptions</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// my mixin</span>
+        <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="c1">// Passed to all mixins in the &#39;mixins&#39; keyword</span>
+    <span class="nx">mixinOptions</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">myOption1</span><span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+        <span class="nx">myOption2</span><span class="o">:</span> <span class="nx">my</span> <span class="nx">other</span> <span class="nx">option</span>
+    <span class="p">}</span>
+
+    <span class="c1">// Extends the base constructor</span>
+    <span class="nx">extend</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">myProp1</span><span class="o">:</span> <span class="mi">1</span>
+    <span class="p">},</span>
+
+    <span class="c1">// Deep extends the base constructor</span>
+    <span class="nx">deepExtend</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">foo</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">bar</span><span class="o">:</span> <span class="mi">1</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+</code></pre></div>
+
+<h4 id="inst">inst</h4>
+<p>Returns an instance of a the given constructor namespace</p>
+
+<div class="highlight"><pre><code>    <span class="c1">// Instantiate it using the same namespace</span>
+
+    <span class="kd">var</span> <span class="nx">myInstance</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">inst</span><span class="p">(</span><span class="s1">&#39;MyConstructorName&#39;</span><span class="p">);</span>
+    <span class="nx">myInstance</span><span class="p">.</span><span class="nx">myMethod</span><span class="p">();</span> <span class="c1">// logs: object is me;</span>
+</code></pre></div>
+
+
+<h4 id="get">get</h4>
+<p>Gets the constructor given a namespace</p>
+
+<div class="highlight"><pre><code>    <span class="c1">// Get the constructor for the namespace &#39;myConstructorName&#39;</span>
+    <span class="kd">var</span> <span class="nx">myConstructor</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;myConstructorName&#39;</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">myConstructor</span><span class="p">();</span>
+</code></pre></div>
+
+
+<h4 id="getmixinsfortype">getMixinsForType</h4>
+<p>Gets the mixins associated with a given constructor namespace</p>
+
+<div class="highlight"><pre><code>    <span class="c1">// Get the mixins for the namespace &#39;myConstructorName&#39;</span>
+    <span class="kd">var</span> <span class="nx">mixins</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">getMixinsFprType</span><span class="p">(</span><span class="s1">&#39;myConstructorName&#39;</span><span class="p">);</span>
+</code></pre></div>
+
+
+</div>
+  </div>
+</body>
+</html>

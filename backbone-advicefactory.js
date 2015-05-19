@@ -1,12 +1,7 @@
-// ==========================================
-// Copyright 2013 Dataminr
-// Licensed under The MIT License
-// http://opensource.org/licenses/MIT
-// ==========================================
-
 /**
  * @version 0.4.0
- *
+ * @copyright Copyright 2013 Dataminr
+ * @license Licensed under The MIT License http://opensource.org/licenses/MIT
  * @fileOverview Advice factory provides an interface to apply advice onto object constructors.
  * It allows you to write to and instantiate from a cache of constructors using a namespace.
  * Allows for creating new constructors from previously cached base constructors.
@@ -64,7 +59,6 @@
         'extend',
         'deepExtend',
         'base',
-        'super',
         'options',
         'mixinOptions'
     ]);

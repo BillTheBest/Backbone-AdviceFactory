@@ -5,13 +5,13 @@ module.exports = function(grunt) {
     var connect = require('./node_modules/grunt-contrib-connect/tasks/connect');
 
     /*** File paths for your source files **/
-    var sourceFilePaths = ['advicefactory.js'];
+    var sourceFilePaths = ['backbone-advicefactory.js'];
 
     /*** File paths for test**/
     var mochaSource = ['test/**/*.test.js'];
 
     /*** File paths for test**/
-    var documentationPaths = ['index.md', 'docs'];
+    var documentationPaths = ['index.md', 'examples'];
 
     grunt.initConfig({
         karma: {
@@ -25,7 +25,7 @@ module.exports = function(grunt) {
                     reporter: 'spec',
                     require: [
                         function(){
-                            require('blanket')({ pattern: "advicefactory.js" });
+                            require('blanket')({ pattern: "backbone-advicefactory.js" });
                         },
                         //Globally include the chai expect module so each test doesn't
                         //need to manually require it

@@ -15,272 +15,125 @@ Read the annotated source <a href="backbone-advicefactory.js.html" target="_blan
 
 ## Overview ##
 <div class="left">
+AdviceFactory is built on top of <a href="http://dataminr.github.io/advice" target="_blank">Advice</a>. It supports all the advice keywords and provides a safe, easy framework for composition and inheritance using advice.
+
 When mixing inheritance models (Backbone's extends and Advice's mixins) there are often cases when you may overwrite mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work.
-         For instance you may extend "initialize" in a latter class that will not only override the former "initialize" method but also all the other mixins that were put on that function. To prevent this happenning
-         Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
+
+For instance you may extend "initialize" in a latter class that will not only override the former "initialize" method but also all the other mixins that were put on that function. To prevent this happening 
+Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
+
 </div>
 
 <div class="clear"></div>
 
 ## Examples ##
-<a href="docs/basic.md.html">Basic example</a>
+<a href="examples/example1.md.html">Basic example</a>
 <div class="clear"></div>
-<a href="docs/simple-backbone.md.html">Simple example with a Backbone app</a>
-<div class="clear"></div>
-<a href="docs/complex-backbone.md.html">Complex example with a Backbone app</a>
+<a href="examples/example2.md.html">Example with overrides and mixins</a>
 <div class="clear"></div>
 
 ## API ##
 
-### before ###
-Functions are run before any functions that already exist with the same name.
-#### addAdvice(object) ####
-- `object` - [_Object_] the object to add _Advice_ to
+The Backbone.AdviceFactory register
+
+| Type      |  Behavior  |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| register    | Registers a constructor using a namespace |
+| inst       |  Returns an instance of a the given constructor namespace |
+| get   |  Returns a constructor using a constructor namespace |
+| getMixinsForType    |  Returns an array of mixins for a given constructor namespace |
+
+
+#### register ####
+
+Registers a constructor using a namespace. The second argument is the options object. This object can contain any of the [advice](http://dataminr.github.io/advice) keywords. 
+
+*Note:* The method is smart about applying properties and methods that are not contained in an advice keyword. By default, all such methods will be applied as 'after's and all such properties will replace
+ones that already exist on the base constructor.
+
+In addition the register method options object has the following reserved keys:
+
+| Keyword      |  Behavior  |
+| ------------ | ------------------------------------------------------------------------------------------- |
+| base    | the constructor to be used as the base for extension |
+| mixins    | Array of mixins to be applied on the constructor |
+| mixinOptions       |  Mixin options that are passed to the constructor |
+| extend   |  extends the constructor with the given object |
+| deepExtend    |  deep extends the constructor with the given object |
+
+*Note:* Mixins are applied after the options object is used to extend the constructor. 
 
 Example:
 ```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-```
-After running this code, all subsequent methods will be available on the object.
-
-### around ###
-Will call the new functions around the existing ones
-#### around(method, function) ####
-- `method` - [_String_] the name of the object's function to attach your method.
-- `function` - [_Function (originalFunction, arguments)_] the function to call around the original method
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.around('doSomething', function(originalFunction, val) {
-    console.log("Running before doSomething() with " + val);
-    originalFunction(val);
-	console.log("Running after doSomething() with " + val);
-});
-```
-
-#### around(methods) ####
-- `methods` - [_Object_] an object with keys corresponding to named functions with the object, and values which contain the function to attach to each named function
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.around({
-	'doSomething': function(originalFunction, val) {
-    	console.log("Running before doSomething() with " + val);
-    	originalFunction(val);
-		console.log("Running after doSomething() with " + val);
+// Register the constructor using a namespace
+Factory.register('MyConstructorName', {
+	// Property is replaced on base constructor
+	myProperty: "foo",
+	
+	// Method applied as an after on the constructor
+	myMethod: function() {
+		console.log(this, ' is me');
+	},
+	
+	// Mixins applied on the constructor
+	mixins: [
+		function(mixinOptions) {
+			// my mixin
+		}
+	],
+	// Passed to all mixins in the 'mixins' keyword
+	mixinOptions: {
+		myOption1: 1,
+		myOption2: "my other option"
+	}
+	
+	// Extends the base constructor
+	extend: {
+		myProp1: 1
+	},
+	
+	// Deep extends the base constructor
+	deepExtend: {
+		foo: {
+			bar: 1
+		}
 	}
 });
 ```
-### before ###
-Will call the new function before the old one with same arguments
-#### before(method, function) ####
-- `method` - [_String_] the name of the object's function to attach your method.
-- `function` - [_Function (arguments)_] the function to call prior to calling the original method
 
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.before('doSomething', function(val) {
-    console.log("Running before doSomething() with " + val);
-});
-```
+#### inst ####
 
-#### before(methods) ####
-- `methods` - [_Object_] an object with keys corresponding to named functions with the object, and values which contain the function to attach to each named function
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.before({
-    'doSomething': function(val) {
-        console.log("Running before doSomething() with " + val);
-    }
-});
-```
-### after ###
-Will call the new function after the old one with same arguments
-#### after(method, function) ####
-- `method` - [_String_] the name of the object's function to attach your method.
-- `function` - [_Function (arguments)_] the function to call prior to calling the original method
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.after('doSomething', function(val) {
-    console.log("Running after doSomething() with " + val);
-});
-```
-
-#### after(methods) ####
-- `methods` - [_Object_] an object with keys corresponding to named functions with the object, and values which contain the function to attach to each named function
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.after({
-    'doSomething': function(val) {
-        console.log("Running after doSomething() with " + val);
-    }
-});
-```
-### clobber ###
-Override properties on an object with new values
-#### clobber(method, function) ####
-- `key` - [_String_] the name of the object's property to override
-- `value` - [_Anything_] the value to set the property to
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.clobber('doSomething', function(val) {
-    console.log("Running instead of usual doSomething() with " + val);
-});
-```
-
-#### clobber(keys) ####
-- `keys` - [_keys_] an object with keys corresponding to the object's properties to override
-
-Example:
-```
-var myObject = {
-    'doSomething': function(val) {
-        console.log("Running doSomething() with " + val);
-    }
-};
-Advice.addAdvice(myObject);
-myObject.clobber({
-    'doSomething': function(val) {
-        console.log("Running instead of usual doSomething() with " + val);
-    }
-);
-```
-### addToObj ###
-will extend all key-values in a the base object, given another objects key-values
-#### addToObj(keys) ####
-- `keys` - [_Object_] an object with keys corresponding to the object's properties to extend
-
-Example:
-```
-var myObject = {
-    'property': {
-        'score': 1
-    }
-};
-Advice.addAdvice(myObject);
-myObject.addToObj({
-    'property': {
-        'rank': 2
-    }
-);
-```
-After running this code, `myObject` will be:
-```
-{
-    'property': {
-        'score': 1,
-        'rank': 2
-    }
-};
-```
-### setDefaults ###
-Acts like a guarded extend. Will only set the given key-values on the base if they don't already exist
-#### setDefaults(keys) ####
-- `keys` - [_Object_] an object with keys corresponding to the object's for which to set defaults
-
-Example:
-```
-var myObject = {
-    'property': {
-        'score': 1
-    }
-};
-Advice.addAdvice(myObject);
-myObject.setDefaults({
-    'property': {
-        'score': 3
-    },
-    'enabled': true
-);
-```
-After running this code, `myObject` will be:
-```
-{
-    'property': {
-        'score': 1
-    },
-    'enabled': true
-}
-```
-### findVal ###
-Utility function for finding a value in a prototype chain
-#### findVal(key) ####
-- `key` - [_String_] the name of the property to search for
-Example:
-```
-var myObject = {
-    'property': {
-        'score': 1
-    }
-};
-Advice.addAdvice(myObject);
-myObject = myObject.findVal('property');
-```
-After running this code, `myObject` will be:
-```
-{
-    'score': 1
-}
-```
-
-## Usage ##
-<div class="left">
-There are a number of ways of adding advice to an object. But first, one must add the advice API to a given object class.
-</div>
+Returns an instance of a the given constructor namespace
 
 ```javascript
-Advice.addAdvice(recipientOfAdvice);
+
+	// Instantiate it using the same namespace
+    
+    var myInstance = Factory.inst('MyConstructorName');
+    myInstance.myMethod(); // logs: object is me;
+
 ```
 
-<div class="clear"></div>
+#### get ####
+
+Gets the constructor given a namespace
+
+```javascript
+
+	// Get the constructor for the namespace 'myConstructorName'
+    var myConstructor = Factory.get('myConstructorName');
+    
+    var inst = new myConstructor();
+
+```
+
+#### getMixinsForType ####
+
+Gets the mixins associated with a given constructor namespace
+
+```javascript
+
+	// Get the mixins for the namespace 'myConstructorName'
+    var mixins = Factory.getMixinsFprType('myConstructorName');
+    
+```

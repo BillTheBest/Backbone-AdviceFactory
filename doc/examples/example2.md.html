@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>example2.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../", thisFile = "examples/example2.md", defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+  <link rel="stylesheet" href="../docs-style.css" />
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="docs markdown">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+<h1 id="example-with-mixins-and-overrides">Example with mixins and overrides</h1>
+<h2 id="demo">Demo</h2>
+<div class="clear"></div>
+<div class="left">
+    In the example, we create a sub-class of a constructor, override its properties and add a mixin to it.
+</div>
+<iframe src="../resources/demos/demo2.html" class="demo-frame" style="height:300px"></iframe>
+
+<div class="clear"></div>
+
+<h2 id="code">Code</h2>
+<div class="spacer"></div>
+<div class="left">
+Define our base class
+</div>
+
+
+<div class="highlight"><pre><code>    <span class="c1">// Define our base class</span>
+    <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="nx">AdviceFactory</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;viewBase&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">base</span><span class="o">:</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span>
+        <span class="nx">el</span><span class="o">:</span> <span class="s1">&#39;#instance1&#39;</span><span class="p">,</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Mr. Moo&#39;</span><span class="p">,</span>
+        <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">click</span><span class="o">:</span> <span class="nx">speak</span>
+        <span class="p">},</span>
+        <span class="nx">speak</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Hi, my name is &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+</code></pre></div>
+
+
+<div class="clear"></div>
+<div class="left">
+    Define our simple mixin that adds/removes a class on hover
+</div>
+
+
+<div class="highlight"><pre><code> <span class="kd">var</span> <span class="nx">addClassOnHover</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mixinOptions</span><span class="p">)</span> <span class="p">{</span>
+         <span class="k">this</span><span class="p">.</span><span class="nx">addToObj</span><span class="p">({</span>
+             <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
+                 <span class="nx">mouseover</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                     <span class="k">this</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span><span class="s1">&#39;highlighted&#39;</span><span class="p">);</span>
+                 <span class="p">},</span>
+                 <span class="nx">mouseleave</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+                     <span class="k">this</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span><span class="s1">&#39;highlighted&#39;</span><span class="p">);</span>
+                 <span class="p">}</span>
+             <span class="p">}</span>
+         <span class="p">});</span>
+     <span class="p">};</span>
+</code></pre></div>
+
+
+<div class="clear"></div>
+<div class="left">
+   Create a sub-class that inherits from our base class. Override the name property and add the mixin.
+</div>
+
+
+<div class="highlight"><pre><code>    <span class="kd">var</span> <span class="nx">extendedBase</span> <span class="o">=</span> <span class="nx">AdviceFactory</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;extendedViewBase&#39;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">base</span><span class="o">:</span> <span class="s1">&#39;viewBase&#39;</span><span class="p">,</span>
+        <span class="c1">// Override the name of the class</span>
+        <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Ms. Meow&#39;</span><span class="p">,</span>
+        <span class="nx">el</span><span class="o">:</span> <span class="s1">&#39;#instance2&#39;</span><span class="p">,</span>
+        <span class="nx">mixins</span><span class="o">:</span> <span class="p">[</span>
+            <span class="nx">addClassOnHover</span>
+        <span class="p">]</span>
+    <span class="p">});</span>
+</code></pre></div>
+
+
+</div>
+  </div>
+</body>
+</html>

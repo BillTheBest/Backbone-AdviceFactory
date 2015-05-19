@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>backbone-advicefactory.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "", thisFile = "backbone-advicefactory.js", defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+  <link rel="stylesheet" href="docs-style.css" />
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container"><div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+      <tr>
+        <td class="docs">
+          <h1>backbone-advicefactory.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary">
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">version</div>
+    <div class="dox_tag_detail">
+      <span>0.4.0
+</span>
+    </div>
+    <div class="dox_tag_title">copyright</div>
+    <div class="dox_tag_detail">
+      <span>Copyright 2013 Dataminr
+</span>
+    </div>
+    <div class="dox_tag_title">license</div>
+    <div class="dox_tag_detail">
+      <span>Licensed under The MIT License <a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>
+</span>
+    </div>
+    <div class="dox_tag_title">fileOverview</div>
+    <div class="dox_tag_detail">
+      <span>Advice factory provides an interface to apply advice onto object constructors.
+It allows you to write to and instantiate from a cache of constructors using a namespace.
+Allows for creating new constructors from previously cached base constructors.
+When mixing inheritance models (Backbone&#39;s extends and Advice&#39;s mixins) there are often cases when you may overwrite
+mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work.
+For instance you may extend &quot;initialize&quot; in a latter class that will not only override the former &quot;initialize&quot;
+method but also all the other mixins that were put on that function. To prevent this happening
+Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all
+the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
+Copyright 2015 Dataminr
+Licensed under The MIT License
+<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>
+work derived from <a href="https://github.com/twitter/flight/blob/master/lib/advice.js">https://github.com/twitter/flight/blob/master/lib/advice.js</a>
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">factory</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">define</span> <span class="o">===</span> <span class="s1">&#39;function&#39;</span> <span class="o">&amp;&amp;</span> <span class="nx">define</span><span class="p">.</span><span class="nx">amd</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">define</span><span class="p">([</span><span class="s1">&#39;mutation-js/lodash.mutation&#39;</span><span class="p">,</span> <span class="s1">&#39;backbone&#39;</span><span class="p">,</span> <span class="s1">&#39;functional-advice&#39;</span><span class="p">],</span> <span class="kd">function</span><span class="p">(</span><span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Advice</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">root</span><span class="p">.</span><span class="nx">AdviceFactory</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Advice</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">root</span><span class="p">.</span><span class="nx">AdviceFactory</span><span class="p">;</span>
+        <span class="p">});</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="k">typeof</span> <span class="nx">exports</span> <span class="o">!==</span> <span class="s1">&#39;undefined&#39;</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">_</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mutation-js/lodash.mutation&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">Backbone</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;backbone&#39;</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">Advice</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;functional-advice&#39;</span><span class="p">);</span>
+        <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Advice</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="nx">root</span><span class="p">.</span><span class="nx">AdviceFactory</span> <span class="o">=</span> <span class="nx">factory</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">_</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">Backbone</span><span class="p">,</span> <span class="nx">root</span><span class="p">.</span><span class="nx">Advice</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">})(</span><span class="k">this</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">root</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Advice</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="nx">Advice</span><span class="p">.</span><span class="nx">addAdvice</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">);</span>
+    <span class="nx">Advice</span><span class="p">.</span><span class="nx">addAdvice</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Model</span><span class="p">);</span>
+    <span class="nx">Advice</span><span class="p">.</span><span class="nx">addAdvice</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">.</span><span class="nx">Collection</span><span class="p">);</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2">&#182;</a>
+</div>
+<p>holds the nodes</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="p">{};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3">&#182;</a>
+</div>
+<p>keys that should be passed to the mixin function</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">adviceKeywords</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;after&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;before&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;around&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;clobber&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;addToObj&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;setDefaults&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;mixin&#39;</span>
+    <span class="p">];</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4">&#182;</a>
+</div>
+<p>reserved keys used by AdviceFactory</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">reserved</span> <span class="o">=</span> <span class="nx">adviceKeywords</span><span class="p">.</span><span class="nx">concat</span><span class="p">([</span>
+        <span class="s1">&#39;mixins&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;extend&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;deepExtend&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;base&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;options&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;mixinOptions&#39;</span>
+    <span class="p">]);</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5">&#182;</a>
+</div>
+<p>keys that should clobbered, even if they are a function</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">extendKeys</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;itemView&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;content&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;header&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;endorsed&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;parse&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;model&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;template&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;widget&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;serialize&#39;</span>
+    <span class="p">];</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Holds information for an inheritance level</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">constructor</div>
+    <div class="dox_tag_detail">
+    </div>
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">base</span>
+      <span class="dox_type">string</span>
+      <span class="dox_type">function(new:Object)</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">ext</span>
+      <span class="dox_type">Object=</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">mixins</span>
+      <span class="dox_type">Object=</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">options
+</span>
+      <span class="dox_type">Object=</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+    <span class="kd">var</span> <span class="nx">BaseNode</span> <span class="o">=</span> <span class="kd">function</span> <span class="nx">BaseNode</span><span class="p">(</span><span class="nx">base</span><span class="p">,</span> <span class="nx">ext</span><span class="p">,</span> <span class="nx">deepExt</span><span class="p">,</span> <span class="nx">mixins</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">base</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">base</span><span class="p">)</span> <span class="o">?</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">base</span><span class="p">]</span> <span class="o">:</span> <span class="nx">base</span><span class="p">;</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">ext</span> <span class="o">=</span> <span class="nx">ext</span> <span class="o">||</span> <span class="p">{};</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">deepExt</span> <span class="o">=</span> <span class="nx">deepExt</span> <span class="o">||</span> <span class="p">{};</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">mixins</span> <span class="o">=</span> <span class="nx">mixins</span> <span class="o">||</span> <span class="p">{};</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">options</span> <span class="o">=</span> <span class="nx">options</span> <span class="o">||</span> <span class="p">{};</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">main</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>register a type with the factory</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">name</span>
+      <span class="dox_type">string</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">options</span>
+      <span class="dox_type">Object</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">function(new:Object)
+</span>
+      <span>{function(new:Object)}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">register</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">opts</span> <span class="o">=</span> <span class="p">{};</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8">&#182;</a>
+</div>
+<p>get the base node</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="nx">options</span><span class="p">.</span><span class="nx">base</span><span class="p">;</span>
+            <span class="nx">opts</span><span class="p">.</span><span class="nx">base</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">base</span><span class="p">)</span> <span class="o">?</span>
+                <span class="nx">cache</span><span class="p">[</span><span class="nx">base</span><span class="p">]</span> <span class="o">:</span>
+                <span class="k">new</span> <span class="nx">BaseNode</span><span class="p">(</span><span class="nx">base</span><span class="p">);</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9">&#182;</a>
+</div>
+<p>makes sure we have the options structure we need</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">opts</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">deepExtend</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">deepExtend</span> <span class="o">||</span> <span class="p">{},</span>
+                <span class="nx">extend</span><span class="o">:</span> <span class="nx">_</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">extend</span><span class="p">)</span> <span class="o">||</span> <span class="p">{},</span>
+                <span class="nx">mixins</span><span class="o">:</span> <span class="nx">_</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">mixins</span><span class="p">)</span> <span class="o">?</span>
+                <span class="p">{</span>
+                    <span class="nx">mixin</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">mixins</span><span class="p">,</span>
+                    <span class="nx">after</span><span class="o">:</span> <span class="p">{},</span>
+                    <span class="nx">before</span><span class="o">:</span> <span class="p">{}</span>
+                <span class="p">}</span> <span class="o">:</span>
+                    <span class="nx">options</span><span class="p">.</span><span class="nx">mixins</span><span class="p">)</span> <span class="o">||</span> <span class="p">{},</span>
+                <span class="nx">options</span><span class="o">:</span> <span class="nx">_</span><span class="p">.</span><span class="nx">clone</span><span class="p">(</span><span class="nx">options</span><span class="p">.</span><span class="nx">mixinOptions</span> <span class="o">||</span> <span class="nx">options</span><span class="p">.</span><span class="nx">options</span><span class="p">)</span> <span class="o">||</span> <span class="p">{}</span>
+            <span class="p">});</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10">&#182;</a>
+</div>
+<p>this is where the magic happens</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11">&#182;</a>
+</div>
+<p>skip reserved keys</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">reserved</span><span class="p">,</span> <span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12">&#182;</a>
+</div>
+<p>functions should be put on as an &#39;after&#39; otherwise extend</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                    <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span><span class="nx">options</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="o">&amp;&amp;</span>
+                        <span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">extendKeys</span><span class="p">,</span> <span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+                        <span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">after</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">after</span> <span class="o">||</span> <span class="p">{}</span>
+                        <span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">.</span><span class="nx">after</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">options</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                        <span class="nx">opts</span><span class="p">.</span><span class="nx">extend</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">options</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13">&#182;</a>
+</div>
+<p>add mixin keywords to a mixin</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span><span class="nx">adviceKeywords</span><span class="p">,</span> <span class="nx">key</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">||</span> <span class="p">{};</span>
+                    <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">options</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14">&#182;</a>
+</div>
+<p>create the inheritance node and return it&#39;s constructor</p>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+            <span class="nx">cache</span><span class="p">[</span><span class="nx">name</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">BaseNode</span><span class="p">(</span><span class="nx">opts</span><span class="p">.</span><span class="nx">base</span><span class="p">,</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">extend</span><span class="p">,</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">deepExtend</span><span class="p">,</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">mixins</span><span class="p">,</span> <span class="nx">opts</span><span class="p">.</span><span class="nx">options</span><span class="p">);</span>
+            <span class="nx">cache</span><span class="p">[</span><span class="nx">name</span><span class="p">].</span><span class="nx">main</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+            <span class="nx">cache</span><span class="p">[</span><span class="nx">name</span><span class="p">].</span><span class="nx">main</span><span class="p">.</span><span class="nx">__name</span> <span class="o">=</span> <span class="nx">name</span><span class="p">;</span>
+            <span class="k">return</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">name</span><span class="p">].</span><span class="nx">main</span><span class="p">;</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>return the constructor for a name</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">name</span>
+      <span class="dox_type">string</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">function(new:Object)
+</span>
+      <span>{function(new:Object)}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">main</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">getAugmentedBase</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">baseConst</span><span class="p">,</span> <span class="nx">advice</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="nx">advice</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span><span class="p">(</span><span class="nx">baseConst</span><span class="p">.</span><span class="nx">__name</span><span class="p">),</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+                    <span class="nx">base</span><span class="o">:</span> <span class="nx">baseConst</span>
+                <span class="p">},</span> <span class="nx">advice</span><span class="p">));</span>
+                <span class="k">return</span> <span class="nx">base</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">baseConst</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">inst</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">type</span><span class="p">))</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="o">:</span> <span class="nx">type</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_inst</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">[</span><span class="nx">base</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">)));</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>instantiate a name with arguments</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">name</span>
+      <span class="dox_type">string</span>
+    </div>
+    <div class="dox_tag_title">oaram</div>
+    <div class="dox_tag_detail">
+      <span class="dox_type">...*</span>
+      <span>var_args
+</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">Object
+</span>
+      <span>{Object}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">_inst</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">base</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="p">(</span><span class="nx">base</span><span class="p">)();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="p">(</span><span class="nx">base</span><span class="p">)(</span><span class="nx">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">3</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="p">(</span><span class="nx">base</span><span class="p">)(</span><span class="nx">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="p">(</span><span class="nx">base</span><span class="p">)(</span><span class="nx">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">3</span><span class="p">]);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">==</span> <span class="mi">5</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">new</span> <span class="p">(</span><span class="nx">base</span><span class="p">)(</span><span class="nx">arguments</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="nx">arguments</span><span class="p">[</span><span class="mi">4</span><span class="p">]);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>extends objects and arrays under an object
+e.g.
+Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
+// {a:{a:1,b:1},b[1,2]};</p>
+
+  </div>
+  <div class="body">
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">extend</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">ext</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">Factory</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">obj</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">ext</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">ext</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isArray</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">]))</span>
+                    <span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">].</span><span class="nx">push</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">ext</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+                <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">ext</span><span class="p">[</span><span class="nx">key</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nx">_</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">]))</span>
+                    <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">],</span> <span class="nx">ext</span><span class="p">[</span><span class="nx">key</span><span class="p">]);</span>
+                <span class="k">else</span>
+                    <span class="nx">obj</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="o">=</span> <span class="nx">ext</span><span class="p">[</span><span class="nx">key</span><span class="p">];</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">getMixinsForType</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">compact</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getMixins</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">level</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">level</span><span class="p">.</span><span class="nx">mixin</span><span class="p">;</span>
+            <span class="p">})));</span>
+        <span class="p">},</span>
+        <span class="nx">getMixinOptionsForType</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOptions</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>get array of mixins object for a BaseNode</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">node</span>
+      <span class="dox_type">BaseNode</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">Array
+</span>
+      <span>{Array}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getMixins</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">node</span> <span class="k">instanceof</span> <span class="nx">BaseNode</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">[{}]</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getMixins</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">base</span><span class="p">).</span><span class="nx">concat</span><span class="p">([</span><span class="nx">node</span><span class="p">.</span><span class="nx">mixins</span> <span class="o">||</span> <span class="p">{}]);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>get the options for mixins for a BaseNode</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">node</span>
+      <span class="dox_type">BaseNode</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">Object
+</span>
+      <span>{Object}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getOptions</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">node</span> <span class="k">instanceof</span> <span class="nx">BaseNode</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">{}</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOptions</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">base</span><span class="p">),</span> <span class="nx">node</span><span class="p">.</span><span class="nx">options</span><span class="p">);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>get the extends for a BaseNode</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">node</span>
+      <span class="dox_type">BaseNode</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">Object
+</span>
+      <span>{Object}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getExt</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">node</span> <span class="k">instanceof</span> <span class="nx">BaseNode</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">{};</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">getExt</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">base</span><span class="p">),</span> <span class="nx">node</span><span class="p">.</span><span class="nx">ext</span><span class="p">);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>get the deep extends for a BaseNode</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">node</span>
+      <span class="dox_type">BaseNode</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">Object
+</span>
+      <span>{Object}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getDeepExt</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">node</span> <span class="k">instanceof</span> <span class="nx">BaseNode</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="p">{};</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">deepExtendWith</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">merge</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDeepExt</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">base</span><span class="p">)),</span> <span class="nx">node</span><span class="p">.</span><span class="nx">deepExt</span><span class="p">);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>get the base constructor for a BaseNode</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">node</span>
+      <span class="dox_type">BaseNode</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">function(new:Object)
+</span>
+      <span>{function(new:Object)}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">getBase</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">base</span> <span class="k">instanceof</span> <span class="nx">BaseNode</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">node</span><span class="p">.</span><span class="nx">base</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getBase</span><span class="p">(</span><span class="nx">node</span><span class="p">.</span><span class="nx">base</span><span class="p">);</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>create a constructor using a BaseNode</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">type</span>
+      <span class="dox_type">string</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">options</span>
+      <span class="dox_type">Object=</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">function(new:Object)
+</span>
+      <span>{function(new:Object)}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">create</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">,</span> <span class="nx">options</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">ret</span> <span class="o">=</span>  <span class="k">this</span><span class="p">.</span><span class="nx">getBase</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">])</span>
+                <span class="p">.</span><span class="nx">extend</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getExt</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]));</span>
+            <span class="kd">var</span> <span class="nx">deepExt</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getDeepExt</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]);</span>
+            <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="nx">_</span><span class="p">.</span><span class="nx">isEmpty</span><span class="p">(</span><span class="nx">deepExt</span><span class="p">))</span> <span class="nx">_</span><span class="p">.</span><span class="nx">deepExtendBase</span><span class="p">(</span><span class="nx">ret</span><span class="p">,</span> <span class="nx">deepExt</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">options</span> <span class="o">=</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({},</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOptions</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]),</span> <span class="nx">options</span><span class="p">);</span>
+            <span class="nx">_</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getMixins</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">mixin</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nx">ret</span><span class="p">.</span><span class="nx">mixin</span><span class="p">(</span><span class="nx">mixin</span><span class="p">,</span> <span class="nx">options</span><span class="p">);</span>
+            <span class="p">});</span>
+            <span class="k">return</span> <span class="nx">ret</span><span class="p">;</span>
+        <span class="p">},</span>
+        <span class="nx">getBaseConstructor</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">inputConstructor</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">inputConstructor</span><span class="p">.</span><span class="nx">__name</span><span class="p">].</span><span class="nx">base</span><span class="p">.</span><span class="nx">main</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">};</span>
+
+<span class="p">});</span>
+</pre></div>
+        </td>
+      </tr>
+  </tbody>
+</table>
+  </div>
+</body>
+</html>
