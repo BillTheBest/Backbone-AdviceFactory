@@ -13,7 +13,7 @@
  * When mixing inheritance models (Backbone's extends and Advice's mixins) there are often cases when you may overwrite
  * mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work.
  * For instance you may extend "initialize" in a latter class that will not only override the former "initialize"
- * method but also all the other mixins that were put on that function. To prevent this happenning
+ * method but also all the other mixins that were put on that function. To prevent this happening
  * Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all
  * the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
  * Copyright 2015 Dataminr
@@ -26,12 +26,12 @@
 
 (function(root, factory) {
     if (typeof define === 'function' && define.amd) {
-        define(['mutation.js/lodash.mutation', 'backbone', 'functional-advice'], function(_, Backbone, Advice) {
+        define(['mutation-js/lodash.mutation', 'backbone', 'functional-advice'], function(_, Backbone, Advice) {
             root.AdviceFactory = factory(root, _, Backbone, Advice);
             return root.AdviceFactory;
         });
     } else if (typeof exports !== 'undefined') {
-        var _ = require('mutation.js/lodash.mutation');
+        var _ = require('mutation-js/lodash.mutation');
         var Backbone = require('backbone');
         var Advice = require('functional-advice');
         module.exports = factory(root, _, Backbone, Advice);
@@ -270,7 +270,7 @@
             if (!(node instanceof BaseNode)) {
                 return {};
             }
-            return Mutation.deepExtendWith(_.merge({}, this.getDeepExt(node.base)), node.deepExt);
+            return _.deepExtendWith(_.merge({}, this.getDeepExt(node.base)), node.deepExt);
         },
         /**
          * get the base constructor for a BaseNode

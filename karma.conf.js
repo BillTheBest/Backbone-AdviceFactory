@@ -6,8 +6,8 @@ module.exports = function(config) {
         // list of files to include
         files: [
             //---------- LIB ----------//
-            {pattern: 'node_modules/mutation.js/mutation.js', included: false},
-            {pattern: 'node_modules/mutation.js/lodash.mutation.js', included: false},
+            {pattern: 'node_modules/mutation-js/mutation.js', included: false},
+            {pattern: 'node_modules/mutation-js/lodash.mutation.js', included: false},
             {pattern: 'node_modules/chai/chai.js', included: false},
             {pattern: 'node_modules/mocha/mocha.js', included: false},
             {pattern: 'node_modules/sinon/pkg/sinon.js', included: false},
