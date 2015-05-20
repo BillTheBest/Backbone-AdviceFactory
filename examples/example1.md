@@ -19,22 +19,17 @@ Define our sub-class inheriting from Backbone.View.
 </div>
 
 ```javascript
-
- var base = AdviceFactory.register('viewBase', {
+    var base = AdviceFactory.register('viewBase', {
         base: Backbone.View,
         name: 'Mr. Moo',
-        el: 'body',
-        render: function() {
-            this.$el.html('<div><button class="speak-btn">Speak</button></div>');
-        },
+        el: '.speak-btn',
         events: {
-            "click .speak-btn": "speak"
+            "click": "speak"
         },
         speak: function() {
             alert('Hi, my name is ' + this.name);
         }
     });
-
 ```
 
 <div class="clear"></div>

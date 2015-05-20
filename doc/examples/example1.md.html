@@ -43,15 +43,12 @@ Define our sub-class inheriting from Backbone.View.
 </div>
 
 
-<div class="highlight"><pre><code> <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="nx">AdviceFactory</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;viewBase&#39;</span><span class="p">,</span> <span class="p">{</span>
+<div class="highlight"><pre><code>    <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="nx">AdviceFactory</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;viewBase&#39;</span><span class="p">,</span> <span class="p">{</span>
         <span class="nx">base</span><span class="o">:</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">View</span><span class="p">,</span>
         <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;Mr. Moo&#39;</span><span class="p">,</span>
-        <span class="nx">el</span><span class="o">:</span> <span class="s1">&#39;body&#39;</span><span class="p">,</span>
-        <span class="nx">render</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-            <span class="k">this</span><span class="p">.</span><span class="nx">$el</span><span class="p">.</span><span class="nx">html</span><span class="p">(</span><span class="s1">&#39;divbutton class=speak-btnSpeak/button/div&#39;</span><span class="p">);</span>
-        <span class="p">},</span>
+        <span class="nx">el</span><span class="o">:</span> <span class="s1">&#39;.speak-btn&#39;</span><span class="p">,</span>
         <span class="nx">events</span><span class="o">:</span> <span class="p">{</span>
-            <span class="nx">click</span> <span class="p">.</span><span class="nx">speak</span><span class="o">-</span><span class="nx">btn</span><span class="o">:</span> <span class="nx">speak</span>
+            <span class="nx">click</span><span class="o">:</span> <span class="nx">speak</span>
         <span class="p">},</span>
         <span class="nx">speak</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
             <span class="nx">alert</span><span class="p">(</span><span class="s1">&#39;Hi, my name is &#39;</span> <span class="o">+</span> <span class="k">this</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
