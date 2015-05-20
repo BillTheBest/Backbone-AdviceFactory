@@ -11,11 +11,6 @@
  * method but also all the other mixins that were put on that function. To prevent this happening
  * Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all
  * the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
- * Copyright 2015 Dataminr
- * Licensed under The MIT License
- * http://opensource.org/licenses/MIT
- * work derived from https://github.com/twitter/flight/blob/master/lib/advice.js
-
  *
  */
 
@@ -79,10 +74,10 @@
     /**
      * Holds information for an inheritance level
      * @constructor
-     * @param {string|function(new:Object)} base
-     * @param {Object=} ext
-     * @param {Object=} mixins
-     * @param {Object=} options
+     * @param {string|function(new:object)} base
+     * @param {object} ext
+     * @param {object} mixins
+     * @param {object} options
      */
     var BaseNode = function BaseNode(base, ext, deepExt, mixins, options) {
         this.base = _.isString(base) ? cache[base] : base;
@@ -96,9 +91,10 @@
     return {
         /**
          * register a type with the factory
-         * @param {string} name
-         * @param {Object} options
-         * @return {function(new:Object)}
+         * @param name {string} Namespace to register the constructor as
+         * @param options {object} Options object to define the new constructor
+         * @param options.base {@link Backbone.View | @link Backbone.Model, @link Backbone.Collection} The base for defining the new constructor
+         * @returns {Function}
          */
         register: function(name, options) {
             var opts = {};
@@ -153,31 +149,26 @@
             return cache[name].main;
         },
         /**
-         * return the constructor for a name
-         * @param {string} name
-         * @return {function(new:Object)}
+         * return the constructor for a namespace
+         * @param type {string} Namespace for the constructor to be returned
+         * @returns {Function}
          */
         get: function(type) {
             return cache[type].main;
         },
-        getAugmentedBase: function(baseConst, advice) {
-            if(advice) {
-                var base = this.register(_.uniqueId(baseConst.__name), _.extend({
-                    base: baseConst
-                }, advice));
-                return base;
-            }
-            return baseConst;
-        },
+        /**
+         * return an instance of the specified constructor namespace
+         * @param type {string | object} string namespace of constructor or constructor itself
+         * @returns {Object}
+         */
         inst: function(type) {
             var base = (_.isString(type)) ? this.get(type) : type;
             return this._inst.apply(this, [base].concat(Array.prototype.slice.call(arguments, 1)));
         },
         /**
-         * instantiate a name with arguments
-         * @param {string} name
-         * @oaram {...*} var_args
-         * @return {Object}
+         * instantiate a constructor with arguments
+         * @param base
+         * @private
          */
         _inst: function(base) {
             if (arguments.length == 1)
@@ -192,10 +183,23 @@
                 return new (base)(arguments[1], arguments[2], arguments[3], arguments[4]);
         },
         /**
-         * extends objects and arrays under an object
+         * extends an objects properties that are objects as well as arrays
          * e.g.
-         * Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
-         * // {a:{a:1,b:1},b[1,2]};
+         * Factory.extend({
+         *      a:{a:1},
+         *      b:[1]
+          * },
+         *  {
+         *      a:{b:1},
+         *      b:[2]
+         *  });
+         * logs: {
+         *      a: {a:1,b:1},
+         *      b[1,2]
+         *  };
+         * @param obj Object to be extended
+         * @param ext Object to be extended with
+         * @returns {*}
          */
         extend: function(obj, ext) {
             if (arguments.length > 2) {
@@ -214,18 +218,28 @@
             }
             return obj;
         },
+        /**
+         * Get the mixins associated with a given constructor namespace
+         * @param type {string} constructor namespace
+         * @returns {array}
+         */
         getMixinsForType: function(type) {
             return _.flatten(_.compact(_.map(this.getMixins(cache[type]), function(level) {
                 return level.mixin;
             })));
         },
+        /**
+         * Get the mixin options associated with a given constructor namespace
+         * @param type
+         * @returns {object}
+         */
         getMixinOptionsForType: function(type) {
             return this.getOptions(cache[type]);
         },
         /**
          * get array of mixins object for a BaseNode
          * @param {BaseNode} node
-         * @return {Array}
+         * @return {array}
          */
         getMixins: function(node) {
             if (!(node instanceof BaseNode)) {
@@ -236,7 +250,7 @@
         /**
          * get the options for mixins for a BaseNode
          * @param {BaseNode} node
-         * @return {Object}
+         * @return {object}
          */
         getOptions: function(node) {
             if (!(node instanceof BaseNode)) {
@@ -247,7 +261,7 @@
         /**
          * get the extends for a BaseNode
          * @param {BaseNode} node
-         * @return {Object}
+         * @return {object}
          */
         getExt: function(node) {
             if (!(node instanceof BaseNode)) {
@@ -258,7 +272,7 @@
         /**
          * get the deep extends for a BaseNode
          * @param {BaseNode} node
-         * @return {Object}
+         * @return {object}
          */
         getDeepExt: function(node) {
             if (!(node instanceof BaseNode)) {
@@ -269,7 +283,7 @@
         /**
          * get the base constructor for a BaseNode
          * @param {BaseNode} node
-         * @return {function(new:Object)}
+         * @return {function(new:object)}
          */
         getBase: function(node) {
             if (!(node.base instanceof BaseNode)) {
@@ -280,8 +294,8 @@
         /**
          * create a constructor using a BaseNode
          * @param {string} type
-         * @param {Object=} options
-         * @return {function(new:Object)}
+         * @param {object} options
+         * @return {function(new:object)}
          */
         create: function(type, options) {
             var ret =  this.getBase(cache[type])

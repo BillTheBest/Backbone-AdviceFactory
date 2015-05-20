@@ -40,9 +40,9 @@
 
 <h2 id="overview">Overview</h2>
 <div class="left">
-AdviceFactory is built on top of <a href="http://dataminr.github.io/advice" target="_blank">Advice</a>. It supports all the advice keywords and provides a safe, easy framework for composition and inheritance using advice. \n
+AdviceFactory is built on top of <a href="http://dataminr.github.io/advice" target="_blank">Advice</a>. It supports all the advice keywords and provides a safe, easy framework for composition and inheritance using advice.
 
-When mixing inheritance models (Backbone&#39;s extends and Advice&#39;s mixins) there are often cases when you may overwrite mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work. \n
+When mixing inheritance models (Backbone&#39;s extends and Advice&#39;s mixins) there are often cases when you may overwrite mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work.
 
 For instance you may extend &quot;initialize&quot; in a latter class that will not only override the former &quot;initialize&quot; method but also all the other mixins that were put on that function. To prevent this happening 
 Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
@@ -126,7 +126,7 @@ ones that already exist on the base constructor.</p>
 <div class="highlight"><pre><code><span class="c1">// Register the constructor using a namespace</span>
 <span class="nx">Factory</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="s1">&#39;MyConstructorName&#39;</span><span class="p">,</span> <span class="p">{</span>
     <span class="c1">// Property is replaced on base constructor</span>
-    <span class="nx">myProperty</span><span class="o">:</span> <span class="nx">foo</span><span class="p">,</span>
+    <span class="nx">myProperty</span><span class="o">:</span> <span class="s1">&#39;foo&#39;</span><span class="p">,</span>
 
     <span class="c1">// Method applied as an after on the constructor</span>
     <span class="nx">myMethod</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
@@ -172,8 +172,8 @@ ones that already exist on the base constructor.</p>
 <h4 id="get">get</h4>
 <p>Gets the constructor given a namespace</p>
 
-<div class="highlight"><pre><code>    <span class="c1">// Get the constructor for the namespace &#39;myConstructorName&#39;</span>
-    <span class="kd">var</span> <span class="nx">myConstructor</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;myConstructorName&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><code>    <span class="c1">// Get the constructor for the namespace &#39;MyConstructorName&#39;</span>
+    <span class="kd">var</span> <span class="nx">myConstructor</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;MyConstructorName&#39;</span><span class="p">);</span>
 
     <span class="kd">var</span> <span class="nx">inst</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">myConstructor</span><span class="p">();</span>
 </code></pre></div>
@@ -182,8 +182,8 @@ ones that already exist on the base constructor.</p>
 <h4 id="getmixinsfortype">getMixinsForType</h4>
 <p>Gets the mixins associated with a given constructor namespace</p>
 
-<div class="highlight"><pre><code>    <span class="c1">// Get the mixins for the namespace &#39;myConstructorName&#39;</span>
-    <span class="kd">var</span> <span class="nx">mixins</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">getMixinsFprType</span><span class="p">(</span><span class="s1">&#39;myConstructorName&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><code>    <span class="c1">// Get the mixins for the namespace &#39;MyConstructorName&#39;</span>
+    <span class="kd">var</span> <span class="nx">mixins</span> <span class="o">=</span> <span class="nx">Factory</span><span class="p">.</span><span class="nx">getMixinsFprType</span><span class="p">(</span><span class="s1">&#39;MyConstructorName&#39;</span><span class="p">);</span>
 </code></pre></div>
 
 

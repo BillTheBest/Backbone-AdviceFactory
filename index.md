@@ -68,7 +68,7 @@ Example:
 // Register the constructor using a namespace
 Factory.register('MyConstructorName', {
 	// Property is replaced on base constructor
-	myProperty: "foo",
+	myProperty: 'foo',
 	
 	// Method applied as an after on the constructor
 	myMethod: function() {
@@ -120,8 +120,8 @@ Gets the constructor given a namespace
 
 ```javascript
 
-	// Get the constructor for the namespace 'myConstructorName'
-    var myConstructor = Factory.get('myConstructorName');
+	// Get the constructor for the namespace 'MyConstructorName'
+    var myConstructor = Factory.get('MyConstructorName');
     
     var inst = new myConstructor();
 
@@ -133,7 +133,7 @@ Gets the mixins associated with a given constructor namespace
 
 ```javascript
 
-	// Get the mixins for the namespace 'myConstructorName'
-    var mixins = Factory.getMixinsFprType('myConstructorName');
+	// Get the mixins for the namespace 'MyConstructorName'
+    var mixins = Factory.getMixinsFprType('MyConstructorName');
     
 ```

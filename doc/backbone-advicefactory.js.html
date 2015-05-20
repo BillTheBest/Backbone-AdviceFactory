@@ -68,10 +68,6 @@ For instance you may extend &quot;initialize&quot; in a latter class that will n
 method but also all the other mixins that were put on that function. To prevent this happening
 Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all
 the mixins together for that level rather than trying to just extend a constructor that already has mixins put on.
-Copyright 2015 Dataminr
-Licensed under The MIT License
-<a href="http://opensource.org/licenses/MIT">http://opensource.org/licenses/MIT</a>
-work derived from <a href="https://github.com/twitter/flight/blob/master/lib/advice.js">https://github.com/twitter/flight/blob/master/lib/advice.js</a>
 </span>
     </div>
   </div>
@@ -206,20 +202,20 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
     <div class="dox_tag_detail">
       <span class="dox_tag_name">base</span>
       <span class="dox_type">string</span>
-      <span class="dox_type">function(new:Object)</span>
+      <span class="dox_type">function(new:object)</span>
     </div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name">ext</span>
-      <span class="dox_type">Object=</span>
+      <span class="dox_type">object</span>
     </div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name">mixins</span>
-      <span class="dox_type">Object=</span>
+      <span class="dox_type">object</span>
     </div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name">options
 </span>
-      <span class="dox_type">Object=</span>
+      <span class="dox_type">object</span>
     </div>
   </div>
 </div>
@@ -255,18 +251,25 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
     <div class="dox_tag_title">Params</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name">name</span>
-      <span class="dox_type">string</span>
+      <span>{string} Namespace to register the constructor as
+</span>
     </div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name">options</span>
-      <span class="dox_type">Object</span>
+      <span>{object} Options object to define the new constructor
+</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">options.base</span>
+      <span>{@link Backbone.View | @link Backbone.Model, @link Backbone.Collection} The base for defining the new constructor
+</span>
     </div>
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">function(new:Object)
+      <span class="dox_type">Function
 </span>
-      <span>{function(new:Object)}
+      <span>{Function}
 </span>
     </div>
   </div>
@@ -420,7 +423,7 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
   <a class="pilcrow" href="#section-15" id="section-15">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p>return the constructor for a name</p>
+  <div class="summary"><p>return the constructor for a namespace</p>
 
   </div>
   <div class="body">
@@ -428,15 +431,16 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
   <div class="details">
     <div class="dox_tag_title">Params</div>
     <div class="dox_tag_detail">
-      <span class="dox_tag_name">name</span>
-      <span class="dox_type">string</span>
+      <span class="dox_tag_name">type</span>
+      <span>{string} Namespace for the constructor to be returned
+</span>
     </div>
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">function(new:Object)
+      <span class="dox_type">Function
 </span>
-      <span>{function(new:Object)}
+      <span>{Function}
 </span>
     </div>
   </div>
@@ -446,19 +450,6 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
         <td class="code highlight"><div class="highlight"><pre>
         <span class="nx">get</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">].</span><span class="nx">main</span><span class="p">;</span>
-        <span class="p">},</span>
-        <span class="nx">getAugmentedBase</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">baseConst</span><span class="p">,</span> <span class="nx">advice</span><span class="p">)</span> <span class="p">{</span>
-            <span class="k">if</span><span class="p">(</span><span class="nx">advice</span><span class="p">)</span> <span class="p">{</span>
-                <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">register</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">uniqueId</span><span class="p">(</span><span class="nx">baseConst</span><span class="p">.</span><span class="nx">__name</span><span class="p">),</span> <span class="nx">_</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
-                    <span class="nx">base</span><span class="o">:</span> <span class="nx">baseConst</span>
-                <span class="p">},</span> <span class="nx">advice</span><span class="p">));</span>
-                <span class="k">return</span> <span class="nx">base</span><span class="p">;</span>
-            <span class="p">}</span>
-            <span class="k">return</span> <span class="nx">baseConst</span><span class="p">;</span>
-        <span class="p">},</span>
-        <span class="nx">inst</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
-            <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">type</span><span class="p">))</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="o">:</span> <span class="nx">type</span><span class="p">;</span>
-            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_inst</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">[</span><span class="nx">base</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">)));</span>
         <span class="p">},</span>
 
 </pre></div>
@@ -470,7 +461,7 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
   <a class="pilcrow" href="#section-16" id="section-16">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p>instantiate a name with arguments</p>
+  <div class="summary"><p>return an instance of the specified constructor namespace</p>
 
   </div>
   <div class="body">
@@ -478,13 +469,8 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
   <div class="details">
     <div class="dox_tag_title">Params</div>
     <div class="dox_tag_detail">
-      <span class="dox_tag_name">name</span>
-      <span class="dox_type">string</span>
-    </div>
-    <div class="dox_tag_title">oaram</div>
-    <div class="dox_tag_detail">
-      <span class="dox_type">...*</span>
-      <span>var_args
+      <span class="dox_tag_name">type</span>
+      <span>{string | object} string namespace of constructor or constructor itself
 </span>
     </div>
     <div class="dox_tag_title">Returns</div>
@@ -494,6 +480,39 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
 </span>
       <span>{Object}
 </span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
+        <span class="nx">inst</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">base</span> <span class="o">=</span> <span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">type</span><span class="p">))</span> <span class="o">?</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="o">:</span> <span class="nx">type</span><span class="p">;</span>
+            <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_inst</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="p">[</span><span class="nx">base</span><span class="p">].</span><span class="nx">concat</span><span class="p">(</span><span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">)));</span>
+        <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>instantiate a constructor with arguments</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">base</span>
+    </div>
+    <div class="dox_tag_title">private
+</div>
+    <div class="dox_tag_detail">
     </div>
   </div>
 </div>
@@ -519,16 +538,47 @@ work derived from <a href="https://github.com/twitter/flight/blob/master/lib/adv
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-17" id="section-17">&#182;</a>
+  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
 </div>
 <div class="dox">
-  <div class="summary"><p>extends objects and arrays under an object
+  <div class="summary"><p>extends an objects properties that are objects as well as arrays
 e.g.
-Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
-// {a:{a:1,b:1},b[1,2]};</p>
+Factory.extend({
+     a:{a:1},
+     b:[1]
+},
+ {
+     a:{b:1},
+     b:[2]
+ });
+logs: {
+     a: {a:1,b:1},
+     b[1,2]
+ };</p>
 
   </div>
   <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">obj</span>
+      <span>Object to be extended
+</span>
+    </div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">ext</span>
+      <span>Object to be extended with
+</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type"><em>
+</span>
+      <span>{</em>}
+</span>
+    </div>
   </div>
 </div>
 
@@ -551,11 +601,79 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
             <span class="p">}</span>
             <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
         <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Get the mixins associated with a given constructor namespace</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">type</span>
+      <span>{string} constructor namespace
+</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">array
+</span>
+      <span>{array}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
         <span class="nx">getMixinsForType</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="nx">_</span><span class="p">.</span><span class="nx">flatten</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">compact</span><span class="p">(</span><span class="nx">_</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">getMixins</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]),</span> <span class="kd">function</span><span class="p">(</span><span class="nx">level</span><span class="p">)</span> <span class="p">{</span>
                 <span class="k">return</span> <span class="nx">level</span><span class="p">.</span><span class="nx">mixin</span><span class="p">;</span>
             <span class="p">})));</span>
         <span class="p">},</span>
+
+</pre></div>
+        </td>
+      </tr>
+      <tr>
+        <td class="docs">
+<div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+</div>
+<div class="dox">
+  <div class="summary"><p>Get the mixin options associated with a given constructor namespace</p>
+
+  </div>
+  <div class="body">
+  </div>
+  <div class="details">
+    <div class="dox_tag_title">Params</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name">type</span>
+    </div>
+    <div class="dox_tag_title">Returns</div>
+    <div class="dox_tag_detail">
+      <span class="dox_tag_name"></span>
+      <span class="dox_type">object
+</span>
+      <span>{object}
+</span>
+    </div>
+  </div>
+</div>
+
+        </td>
+        <td class="code highlight"><div class="highlight"><pre>
         <span class="nx">getMixinOptionsForType</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">type</span><span class="p">)</span> <span class="p">{</span>
             <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">getOptions</span><span class="p">(</span><span class="nx">cache</span><span class="p">[</span><span class="nx">type</span><span class="p">]);</span>
         <span class="p">},</span>
@@ -566,7 +684,7 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-18" id="section-18">&#182;</a>
+  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>get array of mixins object for a BaseNode</p>
@@ -583,9 +701,9 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">Array
+      <span class="dox_type">array
 </span>
-      <span>{Array}
+      <span>{array}
 </span>
     </div>
   </div>
@@ -606,7 +724,7 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-19" id="section-19">&#182;</a>
+  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>get the options for mixins for a BaseNode</p>
@@ -623,9 +741,9 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">Object
+      <span class="dox_type">object
 </span>
-      <span>{Object}
+      <span>{object}
 </span>
     </div>
   </div>
@@ -646,7 +764,7 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-20" id="section-20">&#182;</a>
+  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>get the extends for a BaseNode</p>
@@ -663,9 +781,9 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">Object
+      <span class="dox_type">object
 </span>
-      <span>{Object}
+      <span>{object}
 </span>
     </div>
   </div>
@@ -686,7 +804,7 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-21" id="section-21">&#182;</a>
+  <a class="pilcrow" href="#section-24" id="section-24">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>get the deep extends for a BaseNode</p>
@@ -703,9 +821,9 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">Object
+      <span class="dox_type">object
 </span>
-      <span>{Object}
+      <span>{object}
 </span>
     </div>
   </div>
@@ -726,7 +844,7 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-22" id="section-22">&#182;</a>
+  <a class="pilcrow" href="#section-25" id="section-25">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>get the base constructor for a BaseNode</p>
@@ -743,9 +861,9 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">function(new:Object)
+      <span class="dox_type">function(new:object)
 </span>
-      <span>{function(new:Object)}
+      <span>{function(new:object)}
 </span>
     </div>
   </div>
@@ -766,7 +884,7 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
       <tr>
         <td class="docs">
 <div class="pilwrap">
-  <a class="pilcrow" href="#section-23" id="section-23">&#182;</a>
+  <a class="pilcrow" href="#section-26" id="section-26">&#182;</a>
 </div>
 <div class="dox">
   <div class="summary"><p>create a constructor using a BaseNode</p>
@@ -782,14 +900,14 @@ Factory.extend({a:{a:1},b:[1]},{a:{b:1},b:[2]});
     </div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name">options</span>
-      <span class="dox_type">Object=</span>
+      <span class="dox_type">object</span>
     </div>
     <div class="dox_tag_title">Returns</div>
     <div class="dox_tag_detail">
       <span class="dox_tag_name"></span>
-      <span class="dox_type">function(new:Object)
+      <span class="dox_type">function(new:object)
 </span>
-      <span>{function(new:Object)}
+      <span>{function(new:object)}
 </span>
     </div>
   </div>

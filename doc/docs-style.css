@@ -115,6 +115,7 @@ td.docs {
     padding: 0 20px 1px;
 }
 .docs p {
+    white-space: pre;
 }
 .docs pre {
     border-radius: 5px;
