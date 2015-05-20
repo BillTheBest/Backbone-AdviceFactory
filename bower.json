@@ -21,6 +21,9 @@
         "backbone": ">=1.0.0",
         "functional-advice": "1.0.0"
     },
+    "resolutions": {
+        "lodash": "2.4.1"
+    },
     "devDependencies": {
     },
     "ignore": [
