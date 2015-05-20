@@ -60,8 +60,7 @@ require.config({
         "functional-advice": 'node_modules/functional-advice/advice',
         "backbone": 'node_modules/backbone/backbone',
         "underscore": 'node_modules/underscore/underscore',
-        "mutation-js/lodash.mutation": 'node_modules/mutation-js/lodash.mutation',
-        "mutation-js": 'node_modules/mutation-js/mutation',
+        "mutation-js": 'node_modules/mutation-js',
         "advicefactory": 'backbone-advicefactory'
     },
     shim: {
