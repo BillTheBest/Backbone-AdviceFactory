@@ -13,6 +13,9 @@ module.exports = function(grunt) {
     /*** File paths for test**/
     var documentationPaths = ['index.md', 'examples'];
 
+    /*** File paths for watch **/
+    var watchPaths = documentationPaths.concat(sourceFilePaths).concat(['examples/**/*.*']);
+
     grunt.initConfig({
         karma: {
             test: {
@@ -77,6 +80,15 @@ module.exports = function(grunt) {
                 path: 'http://localhost:<%= connect.all.options.port%>/test/results.html'
             }
         },
+        watch: {
+            scripts: {
+                files: watchPaths,
+                tasks: ['docs'],
+                options: {
+                    spawn: false,
+                }
+            }
+        },
         shell: {
             "install-deps": {
                 command: 'npm install'
@@ -124,6 +136,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-open');
     grunt.loadNpmTasks("grunt-mocha-test");
     grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
     // Creates the `server` task
     grunt.registerTask('default',[
