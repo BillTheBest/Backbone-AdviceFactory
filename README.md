@@ -1,20 +1,27 @@
-# Advice #
+# Backbone Advice-Factory #
 
-Based on the Advice functional mixin library by Angus Croll. Adds functional mixins to an object.
-Advice offers a number of ways to modify methods and properties on an object. 
-It makes it possible to reuse code and compose together functionality to create an object behavior.
+Advice factory provides an interface to apply advice onto object constructors. It writes to and instantiate from a cache of constructors using a namespace and allows for creating new constructors from previously cached bases.
 
 # Website #
 
-Visit the [website](http://dataminr.github.io/advice) for more information
+Visit the [website](http://dataminr.github.io/backbone-advicefactory) for more information
 
 # Development #
 
 ## Tests and Coverage ##
-To generate a test and coverage report:
+
+To run tests
 
 ```javascript
-grunt
+grunt test
+```
+
+To generate a test and coverage report in the browser:
+
+```javascript
+
+grunt karmaTests
+
 ```
 
 ## Documentation ##

@@ -24,8 +24,6 @@
     "resolutions": {
         "lodash": "2.4.1"
     },
-    "devDependencies": {
-    },
     "ignore": [
         "**/.*",
         "coverage",

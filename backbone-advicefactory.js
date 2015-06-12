@@ -6,7 +6,7 @@
  * It allows you to write to and instantiate from a cache of constructors using a namespace.
  * Allows for creating new constructors from previously cached base constructors.
  * When mixing inheritance models (Backbone's extends and Advice's mixins) there are often cases when you may overwrite
- * mixins unintentionally. Backbone.AdviceFactory helps set up the inheritance the way you want it to work.
+ * mixins unintentionally. Backbone AdviceFactory helps set up the inheritance the way you want it to work.
  * For instance you may extend "initialize" in a latter class that will not only override the former "initialize"
  * method but also all the other mixins that were put on that function. To prevent this happening
  * Backbone.AdviceFactory allows you to setup an inheritance structure that will compose all the extends THEN all

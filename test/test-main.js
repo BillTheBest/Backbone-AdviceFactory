@@ -56,7 +56,7 @@ require.config({
         mocha: 'node_modules/mocha/mocha',
         sinon: 'node_modules/sinonjs/sinon',
         jquery: 'node_modules/jquery/dist/jquery',
-        "lodash": 'bower_components/lodash/dist/lodash',
+        "lodash": 'node_modules/lodash/dist/lodash',
         "functional-advice": 'node_modules/functional-advice/advice',
         "backbone": 'node_modules/backbone/backbone',
         "underscore": 'node_modules/underscore/underscore',

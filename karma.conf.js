@@ -15,7 +15,7 @@ module.exports = function(config) {
             {pattern: 'node_modules/jquery/dist/jquery.js', included: false},
             {pattern: 'node_modules/functional-advice/advice.js', included: false},
             {pattern: 'node_modules/underscore/underscore.js', included: false},
-            {pattern: 'bower_components/lodash/dist/lodash.js', included: false},
+            {pattern: 'node_modules/lodash/dist/lodash.js', included: false},
 
             // Files
             {pattern: 'backbone-advicefactory.js', included:false },

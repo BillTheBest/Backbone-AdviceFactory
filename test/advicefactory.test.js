@@ -16,7 +16,6 @@
         root.AdviceFactory = factory(root, root._, root.Backbone, root.AdviceFactory);
     }
 })(this, function(root, _, Backbone, Factory) {
-    console.log('running tests');
     describe('Backbone Advice Factory', function () {
         var dateVal = new Date();
         var arrVal = [1,2,3];

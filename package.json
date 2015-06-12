@@ -60,6 +60,7 @@
     "karma-requirejs": "0.2.2",
     "karma-sinon": "1.0.3",
     "grunt-shell-spawn": "0.3.1",
-    "underscore": "1.8.3"
+    "underscore": "1.8.3",
+    "lodash": "2.4.1"
   }
 }
