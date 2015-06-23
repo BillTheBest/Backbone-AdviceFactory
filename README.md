@@ -4,7 +4,7 @@ Advice factory provides an interface to apply advice onto object constructors. I
 
 # Website #
 
-Visit the [website](http://dataminr.github.io/backbone-advicefactory) for more information
+Visit the [website](http://dataminr.github.io/Backbone-AdviceFactory) for API docs and examples
 
 # Development #
 
@@ -16,17 +16,22 @@ To run tests
 grunt test
 ```
 
-To generate a test and coverage report in the browser:
+To run tests and generate a coverage report in the browser:
 
 ```javascript
-
 grunt karmaTests
-
 ```
 
 ## Documentation ##
-To generate documentation from source code and create a gh-pages branch:
+To generate documentation from source code:
 
 ```javascript
 grunt docs
+```
+When satisfied with docs generated, commit your changes.
+
+To create a gh-pages branch:
+
+```javascript
+grunt publishDocs
 ```
