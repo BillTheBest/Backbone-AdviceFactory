@@ -19,7 +19,7 @@
     "dependencies": {
         "lodash": "3.8.0",
         "backbone": ">=1.0.0",
-        "functional-advice": "1.0.0"
+        "functional-advice": "1.0.1"
     },
     "resolutions": {
         "lodash": "2.4.1"

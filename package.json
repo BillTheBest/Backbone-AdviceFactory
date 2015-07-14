@@ -31,7 +31,7 @@
   "dependencies": {
     "mutation-js": "0.0.6",
     "backbone": ">=1.0.0",
-    "functional-advice": "1.0.0"
+    "functional-advice": "1.0.1"
   },
   "devDependencies": {
     "blanket": "~1.1.6",
